@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Objetivo Junio 2026 — Farming MX</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F7F6F2;
+    color: #2C2C2A;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .top-bar {
+    background: #fff;
+    border-bottom: 1px solid #E0DED8;
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-left h1 { font-size: 17px; font-weight: 600; color: #2C2C2A; }
+  .top-left p { font-size: 12px; color: #888780; margin-top: 2px; }
+  .badge-mes {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+    background: #009EE3; color: #fff;
+    padding: 5px 14px; border-radius: 20px;
+  }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* TABS */
+  .tab-nav {
+    display: flex; gap: 0; margin-bottom: 1.5rem;
+    border: 1px solid #D3D1C7; border-radius: 10px;
+    overflow: hidden; background: #fff;
+  }
+  .tab-btn {
+    flex: 1; padding: 0.9rem 1rem; font-size: 13px; font-weight: 500;
+    background: transparent; border: none; cursor: pointer;
+    color: #888780; transition: background 0.15s, color 0.15s;
+    border-right: 1px solid #D3D1C7;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn .tab-seg { font-size: 11px; opacity: 0.7; }
+  .tab-btn.active { background: #2C2C2A; color: #fff; }
+  .tab-btn.active .tab-seg { opacity: 0.6; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* FRENTE CARDS */
+  .frente-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+  .frente-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-top { background: #009EE3; }
+  .dot-mas { background: #00A650; }
+  .frente-title { font-size: 20px; font-weight: 600; }
+  .frente-prio-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+    margin-left: auto;
+  }
+  .p1-badge { background: #E6F4FF; color: #005C8A; }
+  .p2-badge { background: #F1EFE8; color: #5F5E5A; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+  .card {
+    background: #fff; border: 1px solid #E0DED8;
+    border-radius: 12px; padding: 1rem 1.25rem;
+  }
+  .card-title {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: #888780; margin-bottom: 10px;
+  }
+
+  /* TAG LIST */
+  .tag-list { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    font-size: 12px; padding: 3px 10px;
+    border: 1px solid #D3D1C7; border-radius: 20px;
+    color: #5F5E5A; background: #F7F6F2;
+  }
+  .tag.highlight { background: #E6F4FF; border-color: #B5D4F4; color: #185FA5; }
+  .tag.highlight-green { background: #EAF6EE; border-color: #9FE1CB; color: #0F6E56; }
+
+  /* CADENCIA */
+  .cadencia-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #F1EFE8;
+  }
+  .cadencia-item:last-child { border-bottom: none; }
+  .cadencia-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .cadencia-label { font-size: 11px; color: #888780; }
+  .cadencia-val { font-size: 14px; font-weight: 600; color: #2C2C2A; }
+
+  /* SECUENCIA */
+  .sec-list { display: flex; flex-direction: column; gap: 6px; }
+  .sec-step {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border-radius: 8px; background: #F7F6F2;
+  }
+  .sec-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #D3D1C7; color: #5F5E5A;
+    font-size: 10px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+  .chip {
+    font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 20px;
+  }
+  .chip-ll { background: #E6F4FF; color: #185FA5; }
+  .chip-mail { background: #EAF6EE; color: #0F6E56; }
+  .chip-fast { background: #FFF3E0; color: #854F0B; }
+
+  /* OBJETIVOS */
+  .obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .obj-card {
+    background: #F7F6F2; border-radius: 10px; padding: 12px 14px;
+    text-align: center;
+  }
+  .obj-num { font-size: 32px; font-weight: 700; line-height: 1; }
+  .obj-label { font-size: 11px; color: #888780; margin-top: 4px; }
+  .obj-num.blue { color: #009EE3; }
+  .obj-num.green { color: #00A650; }
+
+  /* BENEFICIOS */
+  .ben-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+  .ben-card {
+    background: #fff; border: 1px solid #E0DED8; border-radius: 12px;
+    padding: 1rem; text-align: center;
+  }
+  .ben-card.top { border: 2px solid #009EE3; }
+  .ben-pct { font-size: 22px; font-weight: 700; color: #2C2C2A; }
+  .ben-prize { font-size: 12px; color: #888780; margin-top: 5px; line-height: 1.4; }
+
+  /* CRM */
+  .crm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .crm-block { background: #fff; border: 1px solid #E0DED8; border-radius: 10px; padding: 12px 14px; }
+  .crm-block-title {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: #888780; margin-bottom: 8px;
+  }
+  .crm-items { display: flex; flex-wrap: wrap; gap: 4px; }
+  .crm-item {
+    font-size: 11px; padding: 2px 8px; border-radius: 20px;
+    background: #F7F6F2; color: #5F5E5A; border: 1px solid #E0DED8;
+  }
+  .crm-nota {
+    grid-column: 1 / -1;
+    background: #FFF8E7; border: 1px solid #FAC775; border-radius: 10px;
+    padding: 10px 14px; font-size: 12px; color: #633806; line-height: 1.6;
+  }
+
+  /* NOTA FINAL */
+  .nota-foco {
+    background: #2C2C2A; color: #F7F6F2;
+    border-radius: 12px; padding: 1rem 1.25rem;
+    font-size: 13px; line-height: 1.6; margin-top: 1.5rem;
+  }
+  .nota-foco strong { color: #fff; }
+
+  /* VISTAS SECTION */
+  .vistas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+  .vista-card {
+    background: #fff; border: 1px solid #E0DED8; border-radius: 10px;
+    padding: 10px 12px; display: flex; flex-direction: column; gap: 5px;
+  }
+  .vista-seg { font-size: 13px; font-weight: 600; }
+  .vista-prio { font-size: 11px; padding: 2px 8px; border-radius: 20px; align-self: flex-start; font-weight: 500; }
+
+  section { margin-bottom: 1.5rem; }
+  .section-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: #888780; margin-bottom: 0.75rem;
+  }
+
+  @media (max-width: 700px) {
+    .grid-2, .grid-3, .ben-grid, .crm-grid, .vistas-grid { grid-template-columns: 1fr 1fr; }
+    .obj-num { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-left">
+    <h1>Objetivo Junio 2026</h1>
+    <p>Farming MX · Ejecución ordenada por frente y prioridad</p>
+  </div>
+  <span class="badge-mes">JUNIO 2026</span>
+</div>
+
+<div class="main">
+
+  <!-- VISTAS -->
+  <section>
+    <p class="section-label">Vistas de trabajo en HubSpot</p>
+    <div class="vistas-grid">
+      <div class="vista-card">
+        <span class="vista-prio p1-badge">Prioridad 1</span>
+        <span class="vista-seg">Top Sellers</span>
+        <span style="font-size:11px;color:#888780;">Junio 2026</span>
+      </div>
+      <div class="vista-card">
+        <span class="vista-prio p2-badge">Prioridad 2</span>
+        <span class="vista-seg">Top Sellers</span>
+        <span style="font-size:11px;color:#888780;">Junio 2026</span>
+      </div>
+      <div class="vista-card">
+        <span class="vista-prio p1-badge">Prioridad 1</span>
+        <span class="vista-seg">Masivos</span>
+        <span style="font-size:11px;color:#888780;">Junio 2026</span>
+      </div>
+      <div class="vista-card">
+        <span class="vista-prio p2-badge">Prioridad 2</span>
+        <span class="vista-seg">Masivos</span>
+        <span style="font-size:11px;color:#888780;">Junio 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('ts-p1')">
+      <span>Top Sellers</span>
+      <span class="tab-seg">Prioridad 1</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('ts-p2')">
+      <span>Top Sellers</span>
+      <span class="tab-seg">Prioridad 2</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('mas-p1')">
+      <span>Masivos</span>
+      <span class="tab-seg">Prioridad 1</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('mas-p2')">
+      <span>Masivos</span>
+      <span class="tab-seg">Prioridad 2</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('beneficios')">
+      <span>Beneficios</span>
+      <span class="tab-seg">del mes</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('crm')">
+      <span>CRM</span>
+      <span class="tab-seg">Estructura</span>
+    </button>
+  </div>
+
+  <!-- TS P1 -->
+  <div id="tab-ts-p1" class="tab-panel active">
+    <div class="frente-header">
+      <span class="frente-dot dot-top"></span>
+      <span class="frente-title">Top Sellers</span>
+      <span class="frente-prio-badge p1-badge">Prioridad 1</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Criterios de entrada</p>
+        <div class="tag-list">
+          <span class="tag highlight">Contacto efectivo este año</span>
+          <span class="tag highlight">Solo PRO</span>
+          <span class="tag highlight">Sin barrer solo PRO</span>
+          <span class="tag">Shopify</span>
+          <span class="tag">WooCommerce</span>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Cadencia</p>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#E6F4FF;">🔁</div>
+          <div><p class="cadencia-label">Intentos mínimos</p><p class="cadencia-val">3 al mes</p></div>
+        </div>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#F1EFE8;">⏱</div>
+          <div><p class="cadencia-label">Frecuencia</p><p class="cadencia-val">Cada 72 hs</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Secuencia de contacto</p>
+        <div class="sec-list">
+          <div class="sec-step">
+            <span class="sec-num">1</span>
+            <div class="sec-chips">
+              <span class="chip chip-ll">Llamada</span>
+              <span class="chip chip-mail">Mail</span>
+              <span class="chip chip-fast">Fast</span>
+            </div>
+          </div>
+          <div class="sec-step">
+            <span class="sec-num">2</span>
+            <div class="sec-chips">
+              <span class="chip chip-mail">Mail</span>
+              <span class="chip chip-fast">Fast</span>
+            </div>
+          </div>
+          <div class="sec-step">
+            <span class="sec-num">3</span>
+            <div class="sec-chips">
+              <span class="chip chip-ll">Llamada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Objetivos del mes</p>
+        <div class="obj-grid">
+          <div class="obj-card">
+            <p class="obj-num blue">15</p>
+            <p class="obj-label">Upsell efectivos</p>
+          </div>
+          <div class="obj-card">
+            <p class="obj-num blue">11</p>
+            <p class="obj-label">Primera posición</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TS P2 -->
+  <div id="tab-ts-p2" class="tab-panel">
+    <div class="frente-header">
+      <span class="frente-dot dot-top"></span>
+      <span class="frente-title">Top Sellers</span>
+      <span class="frente-prio-badge p2-badge">Prioridad 2</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Criterios de entrada</p>
+        <div class="tag-list">
+          <span class="tag">Contacto efectivo año pasado o desconocido</span>
+          <span class="tag highlight">Solo PRO</span>
+          <span class="tag highlight">Leads solo API</span>
+          <span class="tag">Shopify</span>
+          <span class="tag">WooCommerce</span>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Cadencia</p>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#E6F4FF;">🔁</div>
+          <div><p class="cadencia-label">Intentos mínimos</p><p class="cadencia-val">3 al mes</p></div>
+        </div>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#F1EFE8;">⏱</div>
+          <div><p class="cadencia-label">Frecuencia</p><p class="cadencia-val">Cada 72 hs</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Secuencia de contacto</p>
+        <div class="sec-list">
+          <div class="sec-step">
+            <span class="sec-num">1</span>
+            <div class="sec-chips">
+              <span class="chip chip-ll">Llamada</span>
+              <span class="chip chip-mail">Mail</span>
+              <span class="chip chip-fast">Fast</span>
+            </div>
+          </div>
+          <div class="sec-step">
+            <span class="sec-num">2</span>
+            <div class="sec-chips">
+              <span class="chip chip-mail">Mail</span>
+              <span class="chip chip-fast">Fast</span>
+            </div>
+          </div>
+          <div class="sec-step">
+            <span class="sec-num">3</span>
+            <div class="sec-chips">
+              <span class="chip chip-ll">Llamada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Objetivos del mes</p>
+        <div class="obj-grid">
+          <div class="obj-card">
+            <p class="obj-num blue">15</p>
+            <p class="obj-label">Upsell efectivos</p>
+          </div>
+          <div class="obj-card">
+            <p class="obj-num blue">11</p>
+            <p class="obj-label">Primera posición</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASIVOS P1 -->
+  <div id="tab-mas-p1" class="tab-panel">
+    <div class="frente-header">
+      <span class="frente-dot dot-mas"></span>
+      <span class="frente-title">Masivos</span>
+      <span class="frente-prio-badge p1-badge">Prioridad 1</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Criterios de entrada</p>
+        <div class="tag-list">
+          <span class="tag highlight-green">Contacto efectivo este año</span>
+          <span class="tag highlight-green">Solo API</span>
+          <span class="tag highlight-green">Sin barrer solo API</span>
+          <span class="tag">Shopify</span>
+          <span class="tag">WooCommerce</span>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Cadencia</p>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#EAF6EE;">🔁</div>
+          <div><p class="cadencia-label">Intentos</p><p class="cadencia-val">5 intentos</p></div>
+        </div>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#F1EFE8;">⏱</div>
+          <div><p class="cadencia-label">Frecuencia</p><p class="cadencia-val">Cada 48 hs</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Secuencia de contacto</p>
+        <div class="sec-list">
+          <div class="sec-step"><span class="sec-num">1</span><div class="sec-chips"><span class="chip chip-ll">Llamada</span></div></div>
+          <div class="sec-step"><span class="sec-num">2</span><div class="sec-chips"><span class="chip chip-ll">Llamada</span></div></div>
+          <div class="sec-step"><span class="sec-num">3</span><div class="sec-chips"><span class="chip chip-ll">Llamada</span></div></div>
+          <div class="sec-step"><span class="sec-num">4</span><div class="sec-chips"><span class="chip chip-mail">Mail</span><span class="chip chip-fast">Fast</span></div></div>
+          <div class="sec-step"><span class="sec-num">5</span><div class="sec-chips"><span class="chip chip-mail">Mail</span><span class="chip chip-fast">Fast</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Objetivos del mes</p>
+        <div class="obj-grid">
+          <div class="obj-card">
+            <p class="obj-num green">12</p>
+            <p class="obj-label">Upsell efectivos</p>
+          </div>
+          <div class="obj-card">
+            <p class="obj-num green">9</p>
+            <p class="obj-label">Primera posición</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASIVOS P2 -->
+  <div id="tab-mas-p2" class="tab-panel">
+    <div class="frente-header">
+      <span class="frente-dot dot-mas"></span>
+      <span class="frente-title">Masivos</span>
+      <span class="frente-prio-badge p2-badge">Prioridad 2</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Criterios de entrada</p>
+        <div class="tag-list">
+          <span class="tag">Contacto año pasado o desconocido</span>
+          <span class="tag highlight-green">Solo API</span>
+          <span class="tag">Shopify</span>
+          <span class="tag">WooCommerce</span>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Cadencia</p>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#EAF6EE;">🔁</div>
+          <div><p class="cadencia-label">Intentos</p><p class="cadencia-val">5 intentos</p></div>
+        </div>
+        <div class="cadencia-item">
+          <div class="cadencia-icon" style="background:#F1EFE8;">⏱</div>
+          <div><p class="cadencia-label">Frecuencia</p><p class="cadencia-val">Cada 48 hs</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <p class="card-title">Secuencia de contacto</p>
+        <div class="sec-list">
+          <div class="sec-step"><span class="sec-num">1</span><div class="sec-chips"><span class="chip chip-ll">Llamada</span></div></div>
+          <div class="sec-step"><span class="sec-num">2</span><div class="sec-chips"><span class="chip chip-ll">Llamada</span></div></div>
+          <div class="sec-step"><span class="sec-num">3</span><div class="sec-chips"><span class="chip chip-ll">Llamada</span></div></div>
+          <div class="sec-step"><span class="sec-num">4</span><div class="sec-chips"><span class="chip chip-mail">Mail</span><span class="chip chip-fast">Fast</span></div></div>
+          <div class="sec-step"><span class="sec-num">5</span><div class="sec-chips"><span class="chip chip-mail">Mail</span><span class="chip chip-fast">Fast</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Objetivos del mes</p>
+        <div class="obj-grid">
+          <div class="obj-card">
+            <p class="obj-num green">12</p>
+            <p class="obj-label">Upsell efectivos</p>
+          </div>
+          <div class="obj-card">
+            <p class="obj-num green">9</p>
+            <p class="obj-label">Primera posición</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BENEFICIOS -->
+  <div id="tab-beneficios" class="tab-panel">
+    <p class="section-label">Beneficios del mes</p>
+    <div class="ben-grid">
+      <div class="ben-card">
+        <p class="ben-pct">80%</p>
+        <p class="ben-prize">Home<br><span style="font-size:11px;">1 semanal el próximo mes</span></p>
+      </div>
+      <div class="ben-card top">
+        <p class="ben-pct">100%</p>
+        <p class="ben-prize">Gift Card</p>
+      </div>
+      <div class="ben-card">
+        <p class="ben-pct">114%</p>
+        <p class="ben-prize">Mejor Gift Card</p>
+      </div>
+      <div class="ben-card">
+        <p class="ben-pct">3× 114%</p>
+        <p class="ben-prize">Gran premio<br><span style="font-size:11px;">3 meses consecutivos</span></p>
+      </div>
+    </div>
+    <div class="nota-foco">
+      <strong>Meta total del mes:</strong> Top Sellers → 15 upsell + 11 primera posición &nbsp;|&nbsp; Masivos → 12 upsell + 9 primera posición
+    </div>
+  </div>
+
+  <!-- CRM -->
+  <div id="tab-crm" class="tab-panel">
+    <p class="section-label">Estructura de lectura del CRM</p>
+    <div class="crm-grid">
+      <div class="crm-block">
+        <p class="crm-block-title">Foco de trabajo</p>
+        <div class="crm-items">
+          <span class="crm-item">Dupla</span><span class="crm-item">Prioridad</span>
+          <span class="crm-item">Estrategia comercial</span><span class="crm-item">Accionable empresa</span>
+          <span class="crm-item">Producto asociado</span><span class="crm-item">Activo mes pasado</span>
+          <span class="crm-item">TPV</span><span class="crm-item">URL</span><span class="crm-item">Mail MP</span>
+        </div>
+      </div>
+      <div class="crm-block">
+        <p class="crm-block-title">Estado del contacto</p>
+        <div class="crm-items">
+          <span class="crm-item">Contacto establecido</span>
+          <span class="crm-item">Fecha de contacto efectivo</span>
+          <span class="crm-item">Resultado</span>
+          <span class="crm-item">Motivo de no interesado</span>
+          <span class="crm-item">Entendimiento de churn</span>
+          <span class="crm-item">Teléfono</span>
+        </div>
+      </div>
+      <div class="crm-block">
+        <p class="crm-block-title">Gestión del mes</p>
+        <div class="crm-items">
+          <span class="crm-item">Fecha de última gestión</span>
+          <span class="crm-item">Cantidad de intentos</span>
+          <span class="crm-item">Canal de contacto</span>
+          <span class="crm-item">Resultado de contacto</span>
+        </div>
+      </div>
+      <div class="crm-block">
+        <p class="crm-block-title">Datos de contacto</p>
+        <div class="crm-items">
+          <span class="crm-item">Marca</span><span class="crm-item">Nombre</span>
+          <span class="crm-item">Apellido</span><span class="crm-item">Mail MP</span>
+          <span class="crm-item">Mail comercial</span><span class="crm-item">URL</span>
+          <span class="crm-item">Teléfono</span>
+        </div>
+      </div>
+      <div class="crm-block">
+        <p class="crm-block-title">Contexto empresa</p>
+        <div class="crm-items">
+          <span class="crm-item">Cust ID</span><span class="crm-item">Propietario</span>
+          <span class="crm-item">Estado</span><span class="crm-item">Descripción</span>
+          <span class="crm-item">Competencias</span><span class="crm-item">Posición COW</span>
+          <span class="crm-item">Segmento</span><span class="crm-item">Cluster</span>
+        </div>
+      </div>
+      <div class="crm-nota">
+        ⚠️ <strong>Campo "Fecha de última gestión"</strong> es manual — se usa como referencia visual operativa, no como fuente de medición. La trazabilidad real debe quedar respaldada en la actividad registrada en el CRM.
+      </div>
+    </div>
+  </div>
+
+  <div class="nota-foco" style="margin-top:1.5rem;">
+    <strong>Foco junio:</strong> no dispersarse sobre la base general. Capturar la oportunidad correcta según recencia, producto, plataforma, barrido y frente. Trabajar únicamente desde las 4 vistas priorizadas en HubSpot.
+  </div>
+
+</div>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
